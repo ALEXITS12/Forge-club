@@ -3,11 +3,53 @@
  * Frontend de demostración: no es autenticación real; sustituir por una API segura antes de producción.
  */
 
+// Equivalencias entre los nombres de rol que pueda tener la base de datos y los roles de la interfaz.
+const ROLE_ALIASES = {
+  admin: "admin", administrador: "admin",
+  instructor: "instructor", entrenador: "instructor", coach: "instructor",
+  reception: "reception", recepcion: "reception", "recepción": "reception", recepcionista: "reception",
+  maintenance: "maintenance", mantenimiento: "maintenance",
+  accounting: "accounting", contabilidad: "accounting", contador: "accounting",
+  member: "member", socio: "member", cliente: "member"
+};
+
+/*
+ * Determina el rol del usuario autenticado.
+ * 1) Busca su fila en la tabla `usuarios` por correo (columna de rol: rol / role / tipo_usuario / tipo).
+ * 2) Si no hay tabla o columna, busca el correo entre los empleados de la demo.
+ * 3) Si no encuentra nada, es socio (el rol con menos permisos).
+ * NUNCA se lee el rol de user_metadata: el propio usuario puede editarlo al registrarse.
+ */
+async function resolveRole(authUser) {
+  const email = (authUser.email || "").toLowerCase();
+  try {
+    const { data, error } = await ForgeSupabase.table("usuarios").select("*").eq("email", email).limit(1);
+    if (!error && data && data[0]) {
+      const raw = data[0].rol || data[0].role || data[0].tipo_usuario || data[0].tipo;
+      if (raw) return ROLE_ALIASES[String(raw).toLowerCase().trim()] || "member";
+    }
+  } catch (err) {
+    console.warn("No se pudo consultar el rol en la tabla usuarios:", err);
+  }
+  const emp = state.employees.find(x => x.email.toLowerCase() === email && x.status !== "Inactivo");
+  return emp ? emp.role : "member";
+}
+
 async function handleLogin(e) {
   e.preventDefault();
 
   const email = $("#loginEmail").value.trim().toLowerCase();
   const password = $("#loginPassword").value;
+
+  // Cuentas de demostración (admin@forge.demo, coach@forge.demo, recepcion@forge.demo, socio@forge.demo).
+  if (cfg.DEMO_MODE) {
+    const demo = state.users.find(u => u.email === email && u.password && u.password === password && u.status !== "Inactivo");
+    if (demo) {
+      openApp({ ...demo });
+      showToast(`Sesión demo: ${roleName(demo.role)}.`);
+      return;
+    }
+  }
 
   try {
     const { data, error } = await ForgeSupabase.signIn(email, password);
@@ -20,6 +62,7 @@ async function handleLogin(e) {
 
     const authUser = data.user;
     const metadata = authUser.user_metadata || {};
+    const role = await resolveRole(authUser);
 
     const user = {
       id: authUser.id,
@@ -28,12 +71,12 @@ async function handleLogin(e) {
         ? `${metadata.nombre} ${metadata.apellido || ""}`.trim()
         : authUser.email,
       phone: metadata.telefono || "",
-      role: "member",
+      role,
       status: "Activo"
     };
 
     openApp(user);
-    showToast(`¡Bienvenido/a a FORGE Club!`);
+    showToast(`¡Bienvenido/a a FORGE Club! (${roleName(role)})`);
 
   } catch (error) {
     console.error("Error de conexión:", error);

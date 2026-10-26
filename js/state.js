@@ -46,6 +46,19 @@ state.equipmentEvents = state.equipmentEvents || [
   }
 ];
 
+// Migración: historial financiero demo (una sola vez) y campos nuevos de las reservas.
+if (!state.financeHistoryV1) {
+  state.transactions = [...state.transactions, ...seedFinanceHistory()];
+  state.financeHistoryV1 = true;
+}
+
+state.reservations.forEach(r => {
+  if (r.personEmail === undefined) {
+    const u = [...state.users, ...state.employees].find(x => x.name === r.person);
+    r.personEmail = u ? u.email : "";
+  }
+});
+
 function save() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...state, users: state.users.filter(u => !demoUsers.some(d => d.email === u.email)) }));

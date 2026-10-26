@@ -92,6 +92,8 @@ const navByRole = {
     }, {
       id: "myDiet", label: "Mi alimentación", icon: "♧"
     }, {
+      id: "myReservations", label: "Reservar salón", icon: "▦"
+    }, {
       id: "myAttendance", label: "Mis asistencias", icon: "✓"
     }, {
       id: "profile", label: "Mi perfil", icon: "♙"
@@ -111,7 +113,7 @@ const navByRole = {
 };
 
 const pageTitles = {
-  dashboard: "Resumen", members: "Socios", employees: "Empleados", routines: "Rutinas y progreso", diets: "Banco de dietas", myDiet: "Mi alimentación", reservations: "Salones y reservas", equipment: "Equipos y mantenimiento", finance: "Contabilidad", reports: "Reportes", users: "Usuarios y permisos", settings: "Configuración", checkin: "Registrar asistencia", myMembership: "Mi membresía", myRecord: "Mi expediente", myRoutine: "Mi rutina", myAttendance: "Mis asistencias", profile: "Mi perfil"
+  dashboard: "Resumen", members: "Socios", employees: "Empleados", routines: "Rutinas y progreso", diets: "Banco de dietas", myDiet: "Mi alimentación", reservations: "Salones y reservas", equipment: "Equipos y mantenimiento", finance: "Contabilidad", reports: "Reportes", users: "Usuarios y permisos", settings: "Configuración", checkin: "Registrar asistencia", myMembership: "Mi membresía", myRecord: "Mi expediente", myRoutine: "Mi rutina", myAttendance: "Mis asistencias", myReservations: "Reservar salón", profile: "Mi perfil"
 };
 
 function renderNav() {
@@ -145,7 +147,7 @@ function navigate(page) {
 
 function renderPage() {
   const routes = {
-    dashboard: () => currentUser.role === "admin" ? dashboardAdmin() : currentUser.role === "member" ? dashboardMember() : currentUser.role === "instructor" ? dashboardInstructor() : currentUser.role === "reception" ? dashboardReception() : dashboardOther(), members: pageMembers, employees: pageEmployees, routines: pageRoutines, diets: pageDiets, myDiet: pageMyDiet, reservations: pageReservations, equipment: pageEquipment, finance: pageFinance, reports: pageReports, users: pageUsers, settings: pageSettings, checkin: pageCheckin, myMembership: pageMyMembership, myRecord: pageMyRecord, myRoutine: pageMyRoutine, myAttendance: pageMyAttendance, profile: pageProfile
+    dashboard: () => currentUser.role === "admin" ? dashboardAdmin() : currentUser.role === "member" ? dashboardMember() : currentUser.role === "instructor" ? dashboardInstructor() : currentUser.role === "reception" ? dashboardReception() : dashboardOther(), members: pageMembers, employees: pageEmployees, routines: pageRoutines, diets: pageDiets, myDiet: pageMyDiet, reservations: pageReservations, equipment: pageEquipment, finance: pageFinance, reports: pageReports, users: pageUsers, settings: pageSettings, checkin: pageCheckin, myMembership: pageMyMembership, myRecord: pageMyRecord, myRoutine: pageMyRoutine, myAttendance: pageMyAttendance, profile: pageProfile, myReservations: pageMyReservations
   };
   $("#breadcrumbCurrent").textContent = pageTitles[currentPage] || "Resumen";
   $("#appContent").innerHTML = (routes[currentPage] || routes.dashboard)();

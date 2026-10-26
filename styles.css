@@ -2531,3 +2531,24 @@ tbody tr:last-child td {
     transition: none!important;
   }
 }
+/* ===== Reservas de salones ===== */
+.room-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 16px; }
+.room-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; display: grid; gap: 6px; }
+.room-card.free { border-color: #c6f36a55; }
+.room-card.busy { border-color: #ff827b55; }
+.room-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.room-top h3 { margin: 0; font-size: 16px; }
+.room-card p, .room-card small { margin: 0; color: var(--muted); }
+.res-toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+.res-toolbar input[type="date"] { width: auto; }
+.slot-grid { border-collapse: separate; border-spacing: 4px; min-width: 820px; width: 100%; }
+.slot-grid th { font: 600 11px var(--font); color: var(--muted); text-align: center; white-space: nowrap; }
+.slot-grid th.room-name { text-align: left; color: var(--text); font-size: 13px; padding-right: 10px; }
+.slot { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 36px; border-radius: 8px; border: 1px solid transparent; font: 600 11px var(--font); cursor: pointer; }
+.slot-free { background: #c6f36a14; border-color: #c6f36a40; color: var(--accent); }
+.slot-free:hover { background: var(--accent); color: #101110; }
+.slot-busy { background: #ff827b1f; border-color: #ff827b55; color: var(--danger); }
+.slot-past { background: #ffffff08; cursor: default; }
+span.slot-busy { cursor: default; }
+.legend-row { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-top: 10px; }
+.legend-row i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }

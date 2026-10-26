@@ -16,10 +16,6 @@ function openNewRoutine(r = null) {
   showModal(`<h2>${r ? "Editar rutina" : "Nueva rutina"}</h2><p>Asigna un plan de entrenamiento a un socio.</p><form id="routineForm"><input type="hidden" name="id" value="${r?.id || ""}"><div><label>Nombre de la rutina</label><input name="name" value="${esc(r?.name || "")}" required></div><div><label>Socio</label><select name="member" required>${state.members.map(m => `<option ${r?.member === m.name ? "selected" : ""}>${esc(m.name)}</option>`).join("")}</select></div><div><label>Instructor</label><input name="coach" value="${esc(r?.coach || currentUser.name)}" required></div><div><label>Frecuencia</label><select name="days"><option>3 días</option><option ${r?.days === "4 días" ? "selected" : ""}>4 días</option><option>5 días</option><option>6 días</option></select></div><div class="field-full"><label>Notas</label><textarea name="notes">${esc(r?.notes || "")}</textarea></div><div class="modal-actions"><button type="button" class="btn btn-outline" data-action="closeModal">Cancelar</button><button class="btn btn-primary" type="submit">Guardar rutina</button></div></form>`);
 }
 
-function openNewReservation() {
-  showModal(`<h2>Nueva reserva</h2><p>Registra el uso de un salón o espacio.</p><form id="reservationForm"><div><label>Espacio</label><select name="room"><option>Salón funcional</option><option>Salón de yoga</option><option>Área de entrenamiento</option></select></div><div><label>Responsable</label><input name="person" value="${esc(currentUser.name)}" required></div><div><label>Fecha</label><input name="date" type="date" value="${todayISO()}" required></div><div><label>Hora</label><input name="time" type="time" value="17:00" required></div><div><label>Duración</label><select name="duration"><option>45 min</option><option>60 min</option><option>90 min</option></select></div><div class="modal-actions"><button type="button" class="btn btn-outline" data-action="closeModal">Cancelar</button><button class="btn btn-primary" type="submit">Guardar reserva</button></div></form>`);
-}
-
 function openNewEquipment() {
   showModal(`<h2>Registrar equipo</h2><form id="equipmentForm"><div><label>Nombre del equipo</label><input name="name" required></div><div><label>Área</label><select name="area"><option>Cardio</option><option>Fuerza</option><option>Funcional</option><option>Salón</option></select></div><div><label>Próximo mantenimiento</label><input name="next" type="date" value="${addDays(todayISO(), 30)}" required></div><div class="modal-actions"><button type="button" class="btn btn-outline" data-action="closeModal">Cancelar</button><button class="btn btn-primary" type="submit">Guardar equipo</button></div></form>`);
 }
@@ -49,6 +45,7 @@ function handleModalSubmit(e) {
       id, name: data.name.trim(), email, phone: data.phone, role: "member", status: "Activo", planId: data.planId, startDate: data.startDate, endDate: end, paid: 0, attendance: 0, routine: "Pendiente"
     };
     state.members.unshift(m);
+    registerMembershipPayment(m, Number(data.duration));
     if (!state.users.some(u => u.email === email))
       state.users.push({
         ...m, id: `u-${Date.now()}`, password: "", role: "member", needsActivation: true
@@ -57,7 +54,7 @@ function handleModalSubmit(e) {
     save();
     closeModal();
     renderPage();
-    showToast("Socio registrado en la demo.");
+    showToast("Socio registrado y pago enviado a Contabilidad.");
   }
   else if (f.id === "newEmployeeForm") {
     const email = data.email.trim().toLowerCase();
@@ -117,20 +114,7 @@ function handleModalSubmit(e) {
     showToast("Dieta guardada en la demo.");
   }
   else if (f.id === "reservationForm") {
-    const reservation = {
-      id: `RS-${201 + state.reservations.length}`, room: data.room, person: data.person, date: data.date, time: data.time, duration: data.duration, status: "Confirmada"
-    };
-    const conflict = state.reservations.some(r => r.room === reservation.room && r.date === reservation.date && r.time === reservation.time && r.status !== "Cancelada");
-    if (conflict) {
-      showToast("Ya hay una reserva para ese espacio y horario.");
-      return;
-    }
-    state.reservations.unshift(reservation);
-    logActivity("Nueva reserva creada", `${reservation.room} · ${reservation.time}`, "▦");
-    save();
-    closeModal();
-    navigate("reservations");
-    showToast("Reserva registrada.");
+    createReservation(data);
   }
   else if (f.id === "equipmentForm") {
     const item = {
@@ -190,6 +174,10 @@ function handleDynamicFormSubmit(e) {
     closeModal();
     navigate(currentPage);
     showToast("Registro de mantenimiento guardado.");
+  }
+  if (e.target.id === "cancelReservationForm") {
+    e.preventDefault();
+    submitCancelReservation(Object.fromEntries(new FormData(e.target).entries()));
   }
   if (e.target.id === "recoverForm") {
     e.preventDefault();

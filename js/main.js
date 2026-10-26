@@ -48,6 +48,10 @@ document.addEventListener("input", e => {
 document.addEventListener("change", e => {
   if (e.target.id === "memberFilter")
     refreshMemberTable();
+  if (e.target.id === "resDate" && e.target.value) {
+    resViewDate = e.target.value;
+    renderPage();
+  }
   if (e.target.id === "accessMethod") {
     state.settings = state.settings || {};
     state.settings.accessMethod = e.target.value;

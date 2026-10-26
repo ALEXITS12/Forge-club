@@ -10,8 +10,8 @@ function dashboardAdmin() {
   const active = state.members.filter(m => daysUntil(m.endDate) >= 0).length;
   const issues = state.equipment.filter(e => e.status !== "Operativo").length;
   return heading(`Hola, ${esc(currentUser.name.split(" ")[0])} 👋`, "Este es el resumen operativo de FORGE Club.", button("＋ Registrar socio", "newMember") + button("＋ Registrar empleado", "newEmployee", "btn-outline")) +
-    `<div class="stats-grid">${stat("Socios vigentes", active, "De los registros disponibles", "♙")}${stat("Ingresos registrados", money(revenue), "Movimientos de demostración", "＄")}${stat("Vencen en 7 días", expiring, expiring ? "Requieren seguimiento" : "Sin vencimientos cercanos", "◷")}${stat("Incidencias de equipo", issues, issues ? "Revisar mantenimiento" : "Todo operativo", "⚙")}</div>` +
-    `<div class="dashboard-grid">${panel("Ingresos del año", chartHTML(), '<span class="status neutral">DEMO</span>')}${panel("Actividad reciente", activityHTML(), '<button class="table-action" data-action="navigate" data-page="reports">Ver todo ↗</button>')}</div>` +
+    `<div class="stats-grid">${stat("Socios vigentes", active, "De los registros disponibles", "♙")}${stat("Ingresos del mes", money(incomeSummary().cur), incomeSummary().text, "＄")}${stat("Vencen en 7 días", expiring, expiring ? "Requieren seguimiento" : "Sin vencimientos cercanos", "◷")}${stat("Incidencias de equipo", issues, issues ? "Revisar mantenimiento" : "Todo operativo", "⚙")}</div>` +
+    `<div class="dashboard-grid">${panel("Ingresos: este mes vs. mes anterior", incomeCompareChart(), '<span class="status neutral">DEMO</span>')}${panel("Actividad reciente", activityHTML(), '<button class="table-action" data-action="navigate" data-page="reports">Ver todo ↗</button>')}</div>` +
     tablePanel("Membresías que requieren atención", ["SOCIO", "CORREO", "PLAN", "VENCIMIENTO", "ESTADO", ""], memberRows(state.members.filter(m => daysUntil(m.endDate) <= 7).slice(0, 5)), button("Ver socios ↗", "navigateMembers", "btn-outline"));
 }
 
