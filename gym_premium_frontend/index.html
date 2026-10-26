@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="FORGE Club: sistema integral de gestión de gimnasio." />
+  <title>FORGE Club | Entrena con intención</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="mobile.css" />
+</head>
+<body>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <header class="public-nav" id="publicNav">
+    <a class="brand" href="#" data-view="home"><span class="brand-mark">F</span><span>FORGE<span class="brand-muted"> CLUB</span></span></a>
+    <nav><a href="#beneficios">El club</a><a href="#planes">Membresías</a><a href="#contacto">Contacto</a></nav>
+    <div class="nav-actions"><button class="btn btn-quiet" data-view="login">Iniciar sesión</button><button class="btn btn-primary" data-view="register">Únete ahora <span>↗</span></button></div>
+    <button class="mobile-menu" id="mobileMenu" aria-label="Abrir menú" aria-expanded="false" aria-controls="publicSubmenu">☰</button>
+    <div class="submenu hidden" id="publicSubmenu" role="menu" aria-label="Menú de FORGE Club">
+      <div class="submenu-label">MI CUENTA</div>
+      <a class="submenu-item submenu-main" href="#" data-view="login" role="menuitem"><span class="submenu-icon">→</span>Iniciar sesión</a>
+      <a class="submenu-item" href="#" data-view="register" role="menuitem"><span class="submenu-icon">＋</span>Crear cuenta</a>
+      <div class="submenu-label">MI ESPACIO</div>
+      <button class="submenu-item" type="button" data-goto="myRecord" data-gate="Inicia sesión para ver tu progreso." role="menuitem"><span class="submenu-icon">↗</span>Mi progreso</button>
+      <button class="submenu-item" type="button" data-goto="myRoutine" data-gate="Inicia sesión para ver tu rutina." role="menuitem"><span class="submenu-icon">▤</span>Mi rutina</button>
+      <button class="submenu-item" type="button" data-goto="myMembership" data-gate="Inicia sesión para ver tu membresía." role="menuitem"><span class="submenu-icon">▣</span>Mi membresía</button>
+      <div class="submenu-club">
+        <div class="submenu-label">EL CLUB</div>
+        <a class="submenu-item" href="#beneficios" role="menuitem"><span class="submenu-icon">◎</span>El club</a>
+        <a class="submenu-item" href="#planes" role="menuitem"><span class="submenu-icon">▣</span>Membresías</a>
+        <a class="submenu-item" href="#quienes" role="menuitem"><span class="submenu-icon">♙</span>Quiénes somos</a>
+        <a class="submenu-item" href="#sedes" role="menuitem"><span class="submenu-icon">⌖</span>Sedes</a>
+        <a class="submenu-item" href="#horario" role="menuitem"><span class="submenu-icon">◷</span>Horario</a>
+        <a class="submenu-item" href="#contacto" role="menuitem"><span class="submenu-icon">✉</span>Contacto</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="publicPage">
+    <div class="quick-nav" id="quickNav" aria-label="Secciones del sitio">
+      <a class="quick-link active" href="#inicio" data-spy="inicio">Inicio</a>
+      <a class="quick-link" href="#quienes" data-spy="quienes">Quiénes somos</a>
+      <a class="quick-link" href="#sedes" data-spy="sedes">Sedes</a>
+      <a class="quick-link" href="#horario" data-spy="horario">Horario</a>
+    </div>
+    <section class="hero" id="inicio">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="pulse"></span> TU SIGUIENTE NIVEL COMIENZA AQUÍ</div>
+        <h1>Construye una<br><span>versión más fuerte.</span></h1>
+        <p>Entrena con intención. Sigue tu progreso. Forma parte de una comunidad que no se detiene.</p>
+        <div class="hero-actions"><button class="btn btn-primary btn-large" data-view="register">Encuentra tu membresía <span>↗</span></button><a class="text-link" href="#beneficios">Conoce FORGE <span>↓</span></a></div>
+        <div class="hero-proof"><div class="avatar-stack"><i>F</i><i>+</i><i>+</i></div><div><strong>Tu progreso, a tu ritmo.</strong><small>Entrenamiento · Comunidad · Resultados</small></div></div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-image"></div><div class="image-shade"></div>
+        <div class="vertical-label">DISCIPLINA / CONSISTENCIA / PROGRESO</div>
+        <div class="hero-stat"><span class="stat-icon">↗</span><div><strong>MOVE WITH PURPOSE</strong><small>Cada repetición cuenta.</small></div></div>
+        <div class="hero-stamp">F<span>•</span></div>
+      </div>
+      <div class="hero-bottom"><span>01 — ENTRENA</span><span>02 — EVOLUCIONA</span><span>03 — REPITE</span><span class="scroll-cue">SCROLL PARA DESCUBRIR ↓</span></div>
+    </section>
+
+    <section class="section benefits" id="beneficios">
+      <div class="section-heading"><div><div class="eyebrow">MÁS QUE UN GIMNASIO</div><h2>Tu espacio.<br><span>Tu proceso.</span></h2></div><p>Todo lo que necesitas para mantener el ritmo: instalaciones, asesoría y herramientas para dar seguimiento a tus objetivos.</p></div>
+      <div class="feature-grid">
+        <article class="feature-card feature-photo"><div class="feature-number">01 / TRAIN</div><div><h3>Entrena a tu manera.</h3><p>Equipo para fuerza, acondicionamiento y movilidad.</p></div></article>
+        <article class="feature-card feature-dark"><div class="feature-number">02 / TRACK</div><div class="feature-symbol">↗</div><div><h3>Observa tu progreso.</h3><p>Consulta rutinas, asistencias y avances desde tu cuenta.</p></div></article>
+        <article class="feature-card feature-accent"><div class="feature-number">03 / CONNECT</div><div class="feature-symbol">◎</div><div><h3>Un equipo contigo.</h3><p>Conecta con instructores y encuentra tu siguiente reto.</p></div></article>
+      </div>
+    </section>
+
+    <section class="section info-section" id="conoce">
+      <div class="section-heading"><div><div class="eyebrow">CONOCE FORGE</div><h2>Quiénes somos,<br><span>dónde y cuándo.</span></h2></div><p>Los textos, sedes y horarios son de ejemplo. Confirma los datos reales del gimnasio antes de publicar esta página.</p></div>
+
+      <article class="info-block" id="quienes">
+        <div class="info-photo">
+          <div class="info-card">
+            <div class="eyebrow">QUIÉNES SOMOS</div>
+            <h3>Un club para entrenar con constancia.</h3>
+            <p>FORGE Club reúne instalaciones completas, instructores que te orientan y una cuenta personal donde consultas tu rutina, tus asistencias y tu avance.</p>
+            <p>Queremos que cada visita tenga un propósito, sea tu primer día o el número cien.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="info-block reverse" id="sedes">
+        <div class="info-photo">
+          <div class="info-card">
+            <div class="eyebrow">SEDES</div>
+            <h3>Encuentra la más cercana.</h3>
+            <ul class="info-list">
+              <li><b>Sede principal</b><small>Dirección por confirmar</small></li>
+              <li><b>Sede 2</b><small>Dirección por confirmar</small></li>
+            </ul>
+            <p class="info-note">Tu membresía se registra en una sede. Pregunta en recepción si puedes entrenar en otra.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="info-block" id="horario">
+        <div class="info-photo">
+          <div class="info-card">
+            <div class="eyebrow">HORARIO</div>
+            <h3>Abrimos temprano y cerramos tarde.</h3>
+            <ul class="info-list schedule">
+              <li><b>Lunes a viernes</b><span>6:00 a 22:00</span></li>
+              <li><b>Sábado</b><span>8:00 a 18:00</span></li>
+              <li><b>Domingo</b><span>9:00 a 14:00</span></li>
+            </ul>
+            <p class="info-note">Horarios de ejemplo. Los días festivos pueden cambiar.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="section plans-section" id="planes">
+      <div class="section-heading"><div><div class="eyebrow">MEMBRESÍAS</div><h2>Elige cómo<br><span>quieres avanzar.</span></h2></div><p>Los nombres, precios y beneficios son editables. Confirma los importes reales antes de publicar esta página.</p></div>
+      <div class="plans-grid" id="publicPlans"></div>
+    </section>
+
+    <section class="cta-band" id="contacto"><div><div class="eyebrow">EMPIEZA HOY</div><h2>Tu próxima etapa<br>te está esperando.</h2></div><button class="btn btn-dark btn-large" data-view="register">Crear mi cuenta ↗</button></section>
+    <footer class="footer"><a class="brand" href="#" data-view="home"><span class="brand-mark">F</span><span>FORGE<span class="brand-muted"> CLUB</span></span></a><span>© <span id="year"></span> FORGE Club · Demo académica</span><span>Entrena con intención.</span></footer>
+  </main>
+
+  <main id="authPage" class="auth-page hidden">
+    <button class="back-link" data-view="home">← Volver al sitio</button>
+    <div class="auth-shell">
+      <div class="auth-art"><div class="auth-art-logo">F</div><div class="eyebrow">FORGE CLUB / MEMBER ACCESS</div><h2>El progreso<br>se construye<br><span>día a día.</span></h2><p>Tu entrenamiento y tu información, en un solo lugar.</p><div class="auth-art-bottom">DISCIPLINA · CONSTANCIA · RESULTADOS</div></div>
+      <div class="auth-form-wrap">
+        <div class="auth-brand brand"><span class="brand-mark">F</span><span>FORGE<span class="brand-muted"> CLUB</span></span></div>
+        <form id="loginForm" class="auth-form">
+          <div class="eyebrow">QUÉ BUENO VERTE</div><h1>Inicia sesión</h1><p>Ingresa a tu espacio de entrenamiento.</p>
+          <label for="loginEmail">Correo electrónico</label><input id="loginEmail" type="email" placeholder="tu@correo.com" autocomplete="username" required>
+          <label for="loginPassword">Contraseña</label><input id="loginPassword" type="password" placeholder="Tu contraseña" autocomplete="current-password" required>
+          <div class="form-row form-between"><label class="check-label"><input type="checkbox" id="rememberMe"> Recordarme</label><button type="button" class="inline-link" id="forgotPassword">¿Olvidaste tu contraseña?</button></div>
+          <button class="btn btn-primary btn-full btn-large" type="submit">Entrar a mi cuenta ↗</button>
+          <div class="auth-switch">¿Todavía no tienes cuenta? <button type="button" class="inline-link" data-view="register">Regístrate</button></div>
+          <details class="demo-details"><summary>Accesos de demostración</summary><p><b>Administrador:</b> admin@forge.demo</p><p><b>Instructor:</b> coach@forge.demo</p><p><b>Recepción:</b> recepcion@forge.demo</p><p><b>Socio:</b> socio@forge.demo</p><p>Contraseña de todos: <code>ForgeDemo26!</code></p><button type="button" class="btn btn-outline btn-small" id="fillAdmin">Completar acceso de administrador</button></details>
+        </form>
+        <form id="registerForm" class="auth-form hidden">
+          <div class="eyebrow">HAZTE PARTE DEL CLUB</div><h1>Crea tu cuenta</h1><p>Regístrate para consultar tu membresía y entrenamiento.</p>
+          <div class="form-grid"><div class="field-full"><label for="regName">Nombre completo</label><input id="regName" required minlength="3" placeholder="Nombre y apellidos" autocomplete="name"></div>
+          <div><label for="regEmail">Correo electrónico</label><input id="regEmail" type="email" required placeholder="tu@correo.com" autocomplete="email"></div>
+          <div><label for="regPhone">Teléfono</label><input id="regPhone" type="tel" placeholder="10 dígitos" pattern="[0-9+() -]{8,18}" autocomplete="tel"></div>
+          <div class="field-full"><label for="regPlan">Membresía de interés</label><select id="regPlan" required></select></div>
+          <div><label for="regPassword">Contraseña</label><input id="regPassword" type="password" required minlength="8" placeholder="Mínimo 8 caracteres" autocomplete="new-password"></div>
+          <div><label for="regPassword2">Confirmar contraseña</label><input id="regPassword2" type="password" required minlength="8" placeholder="Repite la contraseña" autocomplete="new-password"></div></div>
+          <label class="check-label terms"><input id="regConsent" type="checkbox" required> Acepto el aviso de privacidad y el tratamiento de mis datos.</label>
+          <button class="btn btn-primary btn-full btn-large" type="submit">Crear cuenta ↗</button>
+          <div class="auth-switch">¿Ya tienes cuenta? <button type="button" class="inline-link" data-view="login">Inicia sesión</button></div>
+          <p class="form-note">Demo: el registro se guarda en este navegador. La cuenta real y el correo requieren una API conectada.</p>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <main id="appPage" class="app-page hidden">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand sidebar-brand" href="#" data-action="dashboard"><span class="brand-mark">F</span><span>FORGE<span class="brand-muted"> CLUB</span></span></a>
+      <div class="workspace-label">ESPACIO DE TRABAJO</div>
+      <nav id="sideNav" class="side-nav"></nav>
+      <div class="sidebar-bottom"><div class="support-card"><span class="support-icon">✳</span><b>¿Necesitas ayuda?</b><small>Consulta con el equipo del gimnasio.</small><button class="inline-link" data-action="support">Contactar soporte ↗</button></div><button class="side-user" data-action="profile"><span class="user-avatar" id="sideAvatar">F</span><span class="side-user-info"><b id="sideUserName">Usuario</b><small id="sideUserRole">Socio</small></span><span>⌄</span></button></div>
+    </aside>
+    <section class="app-main">
+      <header class="app-topbar"><button class="mobile-menu app-mobile-menu" id="sideToggle" aria-label="Abrir navegación">☰</button><div class="breadcrumbs"><span>FORGE CLUB</span><span>/</span><b id="breadcrumbCurrent">Resumen</b></div><div class="topbar-actions"><button class="icon-btn" title="Notificaciones" data-action="notifications">♧<i class="notification-dot"></i></button><span class="topbar-date" id="todayLabel"></span><button class="topbar-avatar" data-action="profile" id="topAvatar">F</button></div></header>
+      <div class="app-content" id="appContent"></div>
+    </section>
+  </main>
+  <dialog id="modal" class="modal"><form method="dialog"><button class="modal-close" aria-label="Cerrar">×</button></form><div id="modalContent"></div></dialog>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="api.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/pages/dashboards.js"></script>
+  <script src="js/pages/admin.js"></script>
+  <script src="js/pages/reservations.js"></script>
+  <script src="js/pages/finance.js"></script>
+  <script src="js/pages/member.js"></script>
+  <script src="js/forms.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/actions.js"></script>
+  <script src="js/public.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
