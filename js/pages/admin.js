@@ -52,6 +52,16 @@ function openDietForm(existing = null, template = null, personal = false) {
   showModal(`<h2>${existing ? "Editar dieta" : template ? "Asignar plantilla" : "Registrar dieta personalizada"}</h2><p>Una línea por comida con el formato: hora | nombre de comida | alimentos e indicaciones.</p><form id="dietForm"><input type="hidden" name="id" value="${esc(existing?.id || "")}"><input type="hidden" name="templateId" value="${esc(template?.id || "")}"><div class="field-full"><label>Nombre del plan</label><input name="name" value="${esc(source.name || "")}" required placeholder="Ej. Plan personal del especialista"></div><div><label>Tipo de plan</label><select name="type">${["Volumen", "Definición", "Recomposición corporal", "Mantenimiento", "Alimentación equilibrada", "Personalizada", "Dieta de especialista"].map(t => `<option ${source.type === t || source.name === t ? "selected" : ""}>${t}</option>`).join("")}</select></div><div><label>Socio</label><select name="memberEmail" required>${members}</select></div><div><label>Origen</label><select name="source"><option ${source.source === "Plantilla FORGE" ? "selected" : ""}>Plantilla FORGE</option><option ${source.source === "Personalizada" ? "selected" : ""}>Personalizada</option><option ${source.source === "Especialista externo" ? "selected" : ""}>Especialista externo</option><option ${source.source === "Documento externo" ? "selected" : ""}>Documento externo</option></select></div><div><label>Estado</label><select name="status"><option>Activa</option><option>Pausada</option><option>Finalizada</option></select></div><div class="field-full"><label>Comidas (hora | nombre | alimentos)</label><textarea name="meals" rows="7" placeholder="08:00 | Desayuno | Avena, leche y fruta">${esc(meals)}</textarea></div><div class="field-full"><label>Documento externo (opcional)</label><input name="document" type="file" accept=".pdf,application/pdf"></div><div class="notice-box field-full">No introduzcas datos médicos sensibles innecesarios. La referencia a documentos solo es ilustrativa; el almacenamiento seguro de archivos se conectará al backend.</div><div class="modal-actions"><button type="button" class="btn btn-outline" data-action="closeModal">Cancelar</button><button class="btn btn-primary" type="submit">Guardar dieta</button></div></form>`);
 }
 
+function pageReservations() {
+  if (!["admin", "reception", "instructor"].includes(currentUser.role))
+    return noAccess();
+  const rows = state.reservations.map(r => `<tr><td><b>${esc(r.room)}</b><small class="muted" style="display:block">${esc(r.id)}</small></td><td>${dateLabel(r.date)}</td><td>${esc(r.time)}</td><td>${esc(r.person)}</td><td>${esc(r.duration)}</td><td><span class="status ${r.status === "Pendiente" ? "warning" : ""}">${esc(r.status)}</span></td><td>${currentUser.role === "admin" ? `<button class="table-action" data-action="cancelReservation" data-id="${r.id}">Cancelar</button>` : "—"}</td></tr>`).join("");
+  const roomStats = [...new Set(state.reservations.map(r => r.room))].map(name => ({
+    name, count: state.reservations.filter(r => r.room === name && r.status !== "Cancelada").length
+  })).sort((a, b) => b.count - a.count);
+  return heading("Salones y reservas", "Consulta la agenda y evita perder reservas o espacios disponibles.", currentUser.role === "admin" ? button("＋ Nueva reserva", "newReservation") : "") + `<div class="dashboard-grid">${panel("Agenda", reservationList(state.reservations))}${panel("Reservas activas por espacio", miniBarChart("Uso de salones", roomStats, "name", "count"))}</div>` + tablePanel("Reservas registradas", ["ESPACIO", "FECHA", "HORA", "RESPONSABLE", "DURACIÓN", "ESTADO", ""], rows);
+}
+
 function pageEquipment() {
   if (!["admin", "maintenance"].includes(currentUser.role))
     return noAccess();
@@ -63,8 +73,8 @@ function pageFinance() {
   if (!["admin", "accounting"].includes(currentUser.role))
     return noAccess();
   const income = state.transactions.filter(t => t.type === "Ingreso").reduce((a, t) => a + Number(t.amount), 0), expenses = state.transactions.filter(t => t.type === "Gasto").reduce((a, t) => a + Number(t.amount), 0);
-  const rows = state.transactions.slice().sort((a, b) => b.date.localeCompare(a.date)).slice(0, 40).map(t => `<tr><td>${esc(t.id)}</td><td>${dateLabel(t.date)}</td><td>${esc(t.description)}</td><td>${esc(t.category)}</td><td><span class="status ${t.type === "Gasto" ? "warning" : ""}">${esc(t.type)}</span></td><td>${t.type === "Gasto" ? "−" : "+"}${money(t.amount)}</td></tr>`).join("");
-  return heading("Contabilidad", "Consulta ingresos, gastos y movimientos registrados.", currentUser.role === "admin" ? button("＋ Registrar movimiento", "newTransaction") : "") + `<div class="stats-grid">${stat("Ingresos registrados", money(income), "Datos demo", "＄")}${stat("Gastos registrados", money(expenses), "Datos demo", "↘")}${stat("Balance demo", money(income - expenses), "No representa contabilidad real", "＝")}${stat("Movimientos", state.transactions.length, "Registros visibles", "▤")}</div>` + financeChartsBlock() + tablePanel("Movimientos recientes", ["FOLIO", "FECHA", "DESCRIPCIÓN", "CATEGORÍA", "TIPO", "IMPORTE"], rows);
+  const rows = state.transactions.map(t => `<tr><td>${esc(t.id)}</td><td>${dateLabel(t.date)}</td><td>${esc(t.description)}</td><td>${esc(t.category)}</td><td><span class="status ${t.type === "Gasto" ? "warning" : ""}">${esc(t.type)}</span></td><td>${t.type === "Gasto" ? "−" : "+"}${money(t.amount)}</td></tr>`).join("");
+  return heading("Contabilidad", "Consulta ingresos, gastos y movimientos registrados.", currentUser.role === "admin" ? button("＋ Registrar movimiento", "newTransaction") : "") + `<div class="stats-grid">${stat("Ingresos registrados", money(income), "Datos demo", "＄")}${stat("Gastos registrados", money(expenses), "Datos demo", "↘")}${stat("Balance demo", money(income - expenses), "No representa contabilidad real", "＝")}${stat("Movimientos", state.transactions.length, "Registros visibles", "▤")}</div>` + tablePanel("Movimientos recientes", ["FOLIO", "FECHA", "DESCRIPCIÓN", "CATEGORÍA", "TIPO", "IMPORTE"], rows);
 }
 
 function pageReports() {
@@ -89,14 +99,12 @@ function pageReports() {
   const mealDone = state.mealLogs.filter(l => l.date === today && l.status === "Completada").length;
   const followRate = mealTotal ? Math.round(mealDone / mealTotal * 100) : 0;
   return heading("Reportes", "Indicadores de uso, alimentación, salones y mantenimiento.") +
-    `<div class="dashboard-grid">${panel("Ingresos: este mes vs. mes anterior", incomeCompareChart())}${panel("Distribución de membresías", `<div class="activity-list">${plans.map(p => {
+    `<div class="dashboard-grid">${panel("Tendencia de ingresos", chartHTML())}${panel("Distribución de membresías", `<div class="activity-list">${plans.map(p => {
       const count = state.members.filter(m => m.planId === p.id).length;
       return `<div class="activity-item"><div class="activity-text"><b>${p.name}</b><small>${count} socio(s)</small></div><strong>${count}</strong></div>`;
     }).join("")}</div>`)}</div>` +
     `<div class="report-grid">${panel("Tipos de dieta asignados", miniBarChart("Tipos de dieta", dietCounts, "name", "count"))}${panel("Seguimiento de comidas de hoy", `<div class="report-kpi"><strong>${followRate}%</strong><span>de comidas registradas hoy marcadas como realizadas</span></div><div class="notice-box">${mealDone} de ${mealTotal} registros de hoy figuran como realizados. Es una métrica de registro, no una evaluación nutricional.</div>`)}</div>` +
-    financeReportsBlock() +
     `<div class="report-grid">${panel("Salones más reservados", miniBarChart("Reservas por salón", roomStats, "name", "count") + `<p class="muted report-foot">Reservas no canceladas · ${cancelled} canceladas en total.</p>`)}${panel("Máquinas con más fallas", miniBarChart("Fallas por equipo", equipmentStats, "name", "count") + `<p class="muted report-foot">Basado en incidencias registradas. Registra cada falla y reparación para mantener el indicador útil.</p>`)}</div>` +
-    reservationInsightsBlock() +
     `<div class="notice-box">Las cifras se calculan con datos guardados en este navegador y son de demostración. Para decisiones reales se necesitan registros consistentes de reservas, comidas, fallas, reparaciones y costos.</div>`;
 }
 

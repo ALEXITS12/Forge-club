@@ -205,34 +205,3 @@ const seedTransactions = [
     id: "TX-404", type: "Ingreso", category: "Membresía Essential", description: "Membresía — Mateo Hernández", amount: 499, date: addDays(todayISO(), -3)
   }
 ];
-
-// Reservas extra de ejemplo: una de socio, una cancelación tardía y una inasistencia (alimentan los reportes).
-seedReservations.push(
-  { id: "RS-204", room: "Salón de yoga", person: "Santiago López", personEmail: "socio@forge.demo", date: todayISO(), time: "19:30", duration: "60 min", status: "Confirmada" },
-  { id: "RS-205", room: "Salón funcional", person: "Camila Torres", personEmail: "camila@example.com", date: addDays(todayISO(), -1), time: "18:00", duration: "60 min", status: "No asistió" },
-  { id: "RS-206", room: "Salón de yoga", person: "Mateo Hernández", personEmail: "mateo@example.com", date: addDays(todayISO(), -2), time: "07:00", duration: "45 min", status: "Cancelada", cancelledAt: addDays(todayISO(), -2) + "T06:20:00", cancelledBy: "Recepción", cancelReason: "El socio avisó tarde", lateCancel: true }
-);
-
-/*
- * Historial financiero ficticio (mes actual hasta hoy + 5 meses anteriores) para que las
- * gráficas de comparación tengan datos. Se marca con demo:true y se reemplaza por pagos reales.
- */
-function seedFinanceHistory() {
-  const out = [], today = new Date(), prices = [499, 699, 899], names = ["Essential", "Performance", "Unlimited"];
-  for (let k = 0; k <= 5; k++) {
-    const first = new Date(today.getFullYear(), today.getMonth() - k, 1);
-    const last = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
-    const maxDay = k === 0 ? today.getDate() : last;
-    for (let d = 1; d <= maxDay; d++) {
-      const date = localISO(new Date(first.getFullYear(), first.getMonth(), d));
-      // Los meses más antiguos tienen menos cobros: así se aprecia una tendencia de crecimiento.
-      if ((d * 7 + k * 3) % 10 < 10 - k) {
-        const i = (d + k) % 3;
-        out.push({ id: `TXH-${k}${String(d).padStart(2, "0")}`, type: "Ingreso", category: `Membresía ${names[i]}`, description: `Membresía ${names[i]} — socio demo`, amount: prices[i] * (d % 4 === 0 ? 2 : 1), date, demo: true });
-      }
-      const exp = d === 1 ? ["Renta", "Renta del local", 8000] : d === 10 ? ["Servicios", "Luz, agua e internet", 2800 + k * 40] : d === 18 ? ["Mantenimiento", "Servicio de equipos", 1100 + k * 90] : null;
-      if (exp) out.push({ id: `TXG-${k}${String(d).padStart(2, "0")}`, type: "Gasto", category: exp[0], description: exp[1], amount: exp[2], date, demo: true });
-    }
-  }
-  return out;
-}

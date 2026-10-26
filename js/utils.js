@@ -10,19 +10,14 @@ const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 
 const cfg = window.FORGE_CONFIG || { DEMO_MODE: true, CURRENCY: "MXN" };
 
-function localISO(d) {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
-
-// Fecha local del navegador (no UTC), para que "hoy" coincida con el día real en México.
 function todayISO() {
-  return localISO(new Date());
+  return new Date().toISOString().slice(0, 10);
 }
 
 function addDays(date, days) {
   const d = new Date(`${date}T12:00:00`);
   d.setDate(d.getDate() + days);
-  return localISO(d);
+  return d.toISOString().slice(0, 10);
 }
 
 function money(n) {

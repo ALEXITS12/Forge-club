@@ -82,10 +82,7 @@ function dispatch(action, el) {
       openNewRoutine(state.routines.find(r => r.id === id));
       break;
     case "newReservation":
-      if ([...STAFF_RES_ROLES, "member"].includes(currentUser?.role))
-        openNewReservation();
-      else
-        showToast("Tu rol no puede crear reservas.");
+      openNewReservation();
       break;
     case "newEquipment":
       openNewEquipment();
@@ -115,7 +112,6 @@ function dispatch(action, el) {
       openMeasurementForm();
       break;
     case "logout":
-      try { ForgeSupabase.getClient().auth.signOut(); } catch (err) { /* sin sesión de Supabase */ }
       currentUser = null;
       currentPage = "dashboard";
       $("#sidebar").classList.remove("open");
@@ -135,28 +131,17 @@ function dispatch(action, el) {
       }
       break;
     }
-    case "cancelReservation":
-      openCancelReservation(id);
+    case "cancelReservation": {
+      const r = state.reservations.find(x => x.id === id);
+      if (r) {
+        r.status = "Cancelada";
+        logActivity("Reserva cancelada", `${r.room} · ${r.date}`, "×");
+        save();
+        renderPage();
+        showToast("Reserva cancelada.");
+      }
       break;
-    case "reservationDetail":
-      openReservationDetail(id);
-      break;
-    case "reserveSlot":
-      openNewReservation({ room: el.dataset.room, date: el.dataset.date, time: el.dataset.time });
-      break;
-    case "resToday":
-      resViewDate = todayISO();
-      renderPage();
-      break;
-    case "confirmReservation":
-      setReservationStatus(id, "Confirmada", "Reserva confirmada");
-      break;
-    case "markAttended":
-      setReservationStatus(id, "Asistió", "Asistencia registrada");
-      break;
-    case "markNoShow":
-      setReservationStatus(id, "No asistió", "Inasistencia registrada");
-      break;
+    }
     case "equipmentStatus": {
       const e = state.equipment.find(x => x.id === id);
       if (e) {
@@ -174,12 +159,11 @@ function dispatch(action, el) {
         m.startDate = todayISO();
         m.endDate = addDays(todayISO(), 30);
         m.status = "Activo";
-        registerMembershipPayment(m, 30);
         logActivity("Membresía renovada", `${m.name} · ${plan(m.planId).name}`, "↻");
         save();
         closeModal();
         renderPage();
-        showToast("Membresía renovada y pago registrado en Contabilidad.");
+        showToast("Membresía renovada en la demo. Registra el pago por separado.");
       }
       break;
     }
